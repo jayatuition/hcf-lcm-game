@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> HCF & LCM Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            margin-top: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #16a34a;
+        }
+        .info-box {
+            background: #eef2ff;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .info-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .number {
+            color: #4f46e5;
+        }
+        .factor-display {
+            background: #f0fdf4;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .factor-label {
+            font-weight: 600;
+            color: #166534;
+            margin-bottom: 8px;
+        }
+        .factor-value {
+            font-size: 24px;
+            color: #15803d;
+        }
+        .warning-box {
+            background: #fef9c3;
+            border: 2px solid #fbbf24;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .warning-text {
+            font-weight: 600;
+            color: #92400e;
+        }
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        .input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+        .input:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #4f46e5;
+            color: white;
+        }
+        .btn:hover:not(:disabled) {
+            background: #4338ca;
+        }
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 20px;
+        }
+        .message {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .message-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .message-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .center {
+            text-align: center;
+        }
+        .py-12 {
+            padding-top: 48px;
+            padding-bottom: 48px;
+        }
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+        .mb-8 {
+            margin-bottom: 32px;
+        }
+        .text-lg {
+            font-size: 18px;
+        }
+        .text-xl {
+            font-size: 20px;
+        }
+        .text-3xl {
+            font-size: 30px;
+        }
+        .text-6xl {
+            font-size: 60px;
+        }
+        .text-gray {
+            color: #6b7280;
+        }
+        .text-sm {
+            font-size: 14px;
+        }
+        .font-semibold {
+            font-weight: 600;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1 class="title">🏆 JAYA TUTION <br/> HCF & LCM Challenge</h1>
+                <div class="score">Score: <span id="score">0</span></div>
+            </div>
+
+            <!-- Start Screen -->
+            <div id="startScreen" class="center py-12">
+                <p class="text-lg text-gray mb-8">
+                    Test your skills in finding prime factors, HCF, and LCM!
+                </p>
+                <button onclick="startGame()" class="btn btn-large">
+                    Start Game
+                </button>
+            </div>
+
+            <!-- Factor Screen -->
+            <div id="factorScreen" class="hidden">
+                <div class="info-box">
+                    <h2 class="info-title">
+                        Numbers: <span class="number" id="displayNum1"></span> and <span class="number" id="displayNum2"></span>
+                    </h2>
+                    <p class="text-gray" id="factorPrompt"></p>
+                    <p class="text-sm text-gray mb-2">
+                        Attempts: <span id="attempts">0</span>/3
+                    </p>
+                </div>
+
+                <div id="factorDisplay" class="factor-display hidden">
+                    <p class="factor-label">Factor Tree:</p>
+                    <div class="factor-value" id="factorTree"></div>
+                    <p class="text-sm text-gray mb-2" id="remaining"></p>
+                </div>
+
+                <div id="warningBox" class="warning-box hidden">
+                    <p class="warning-text" id="warningText"></p>
+                </div>
+
+                <div class="input-group">
+                    <input
+                        type="number"
+                        id="factorInput"
+                        placeholder="Enter a prime factor"
+                        class="input"
+                    />
+                    <button onclick="submitFactor()" class="btn">
+                        Submit
+                    </button>
+                </div>
+
+                <div id="factorMessage" class="message hidden"></div>
+            </div>
+
+            <!-- HCF Screen -->
+            <div id="hcfScreen" class="hidden">
+                <div class="info-box">
+                    <h2 class="info-title">
+                        Numbers: <span class="number" id="hcfNum1"></span> and <span class="number" id="hcfNum2"></span>
+                    </h2>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray">Prime factors of <span id="hcfN1"></span>:</p>
+                        <p class="text-lg font-semibold number" id="hcfFactors1"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray">Prime factors of <span id="hcfN2"></span>:</p>
+                        <p class="text-lg font-semibold number" id="hcfFactors2"></p>
+                    </div>
+                </div>
+
+                <p class="text-lg mb-4 font-semibold">What is the HCF (Highest Common Factor)?</p>
+
+                <div class="input-group">
+                    <input type="number" id="hcfInput" placeholder="Enter HCF" class="input" />
+                    <button onclick="submitHCF()" class="btn">Submit</button>
+                </div>
+
+                <div id="hcfMessage" class="message hidden"></div>
+            </div>
+
+            <!-- LCM Screen -->
+            <div id="lcmScreen" class="hidden">
+                <div class="info-box">
+                    <h2 class="info-title">
+                        Numbers: <span class="number" id="lcmNum1"></span> and <span class="number" id="lcmNum2"></span>
+                    </h2>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray">Prime factors of <span id="lcmN1"></span>:</p>
+                        <p class="text-lg font-semibold number" id="lcmFactors1"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray">Prime factors of <span id="lcmN2"></span>:</p>
+                        <p class="text-lg font-semibold number" id="lcmFactors2"></p>
+                    </div>
+                </div>
+
+                <p class="text-lg mb-4 font-semibold">What is the LCM (Lowest Common Multiple)?</p>
+
+                <div class="input-group">
+                    <input type="number" id="lcmInput" placeholder="Enter LCM" class="input" />
+                    <button onclick="submitLCM()" class="btn">Submit</button>
+                </div>
+
+                <div id="lcmMessage" class="message hidden"></div>
+            </div>
+
+            <!-- Complete Screen -->
+            <div id="completeScreen" class="center py-12 hidden">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="text-3xl number mb-4">Round Complete!</h2>
+                <p class="text-xl text-gray mb-8">Your Score: <span id="finalScore"></span></p>
+                <button onclick="startGame()" class="btn btn-large">
+                    🔄 Play Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let num1, num2, gamePhase, currentFactors1, currentFactors2;
+        let correctFactors1, correctFactors2, attempts, score, showFactors;
+
+        function getPrimeFactors(n) {
+            const factors = [];
+            let num = n;
+            for (let i = 2; i <= num; i++) {
+                while (num % i === 0) {
+                    factors.push(i);
+                    num = num / i;
+                }
+            }
+            return factors;
+        }
+
+        function calculateHCF(a, b) {
+            while (b !== 0) {
+                let temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        function calculateLCM(a, b) {
+            return (a * b) / calculateHCF(a, b);
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('#startScreen, #factorScreen, #hcfScreen, #lcmScreen, #completeScreen').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function startGame() {
+            num1 = Math.floor(Math.random() * 90) + 10;
+            num2 = Math.floor(Math.random() * 90) + 10;
+            correctFactors1 = getPrimeFactors(num1);
+            correctFactors2 = getPrimeFactors(num2);
+            currentFactors1 = [];
+            currentFactors2 = [];
+            attempts = 0;
+            showFactors = false;
+            gamePhase = 'factor1';
+            
+            document.getElementById('displayNum1').textContent = num1;
+            document.getElementById('displayNum2').textContent = num2;
+            document.getElementById('factorPrompt').textContent = `Find the prime factors of ${num1}`;
+            document.getElementById('attempts').textContent = '0';
+            document.getElementById('factorInput').value = '';
+            document.getElementById('factorInput').disabled = false;
+            document.getElementById('factorDisplay').classList.add('hidden');
+            document.getElementById('warningBox').classList.add('hidden');
+            document.getElementById('factorMessage').classList.add('hidden');
+            
+            showScreen('factorScreen');
+        }
+
+        function updateFactorDisplay() {
+            const factors = gamePhase === 'factor1' ? currentFactors1 : currentFactors2;
+            const currentNum = gamePhase === 'factor1' ? num1 : num2;
+            
+            if (factors.length > 0) {
+                const product = factors.reduce((a, b) => a * b, 1);
+                document.getElementById('factorTree').innerHTML = factors.join(' × ') + 
+                    (product !== currentNum ? `<span class="text-gray"> = ${product}</span>` : '');
+                
+                if (product !== currentNum) {
+                    document.getElementById('remaining').textContent = `Remaining to factor: ${currentNum / product}`;
+                } else {
+                    document.getElementById('remaining').textContent = '';
+                }
+                document.getElementById('factorDisplay').classList.remove('hidden');
+            }
+        }
+
+        function showMessage(elementId, text, isSuccess) {
+            const el = document.getElementById(elementId);
+            el.textContent = text;
+            el.className = `message ${isSuccess ? 'message-success' : 'message-error'}`;
+            el.classList.remove('hidden');
+        }
+
+        function submitFactor() {
+            const input = document.getElementById('factorInput');
+            const factor = parseInt(input.value);
+            const currentNum = gamePhase === 'factor1' ? num1 : num2;
+            const currentFactors = gamePhase === 'factor1' ? currentFactors1 : currentFactors2;
+            const correctFactors = gamePhase === 'factor1' ? correctFactors1 : correctFactors2;
+            
+            if (isNaN(factor) || factor < 2) {
+                showMessage('factorMessage', 'Please enter a valid prime number (2 or greater)', false);
+                return;
+            }
+
+            const product = currentFactors.length === 0 ? 1 : currentFactors.reduce((a, b) => a * b, 1);
+            const remaining = currentNum / product;
+
+            if (remaining % factor !== 0) {
+                attempts++;
+                document.getElementById('attempts').textContent = attempts;
+                showMessage('factorMessage', `${factor} is not a factor of the remaining number ${remaining}`, false);
+                
+                if (attempts >= 3) {
+                    showMessage('factorMessage', `Too many attempts! The correct factors are: ${correctFactors.join(' × ')}`, false);
+                    document.getElementById('warningBox').classList.remove('hidden');
+                    document.getElementById('warningText').textContent = `Correct factors: ${correctFactors.join(' × ')}`;
+                    document.getElementById('factorInput').disabled = true;
+                    
+                    setTimeout(() => {
+                        if (gamePhase === 'factor1') {
+                            currentFactors1 = [...correctFactors];
+                            gamePhase = 'factor2';
+                            document.getElementById('factorPrompt').textContent = `Find the prime factors of ${num2}`;
+                            document.getElementById('factorInput').value = '';
+                            document.getElementById('factorInput').disabled = false;
+                            attempts = 0;
+                            document.getElementById('attempts').textContent = '0';
+                            document.getElementById('factorDisplay').classList.add('hidden');
+                            document.getElementById('warningBox').classList.add('hidden');
+                            document.getElementById('factorMessage').classList.add('hidden');
+                        } else {
+                            currentFactors2 = [...correctFactors];
+                            moveToHCF();
+                        }
+                    }, 3000);
+                }
+                return;
+            }
+
+            if (gamePhase === 'factor1') {
+                currentFactors1.push(factor);
+            } else {
+                currentFactors2.push(factor);
+            }
+
+            const newProduct = (gamePhase === 'factor1' ? currentFactors1 : currentFactors2).reduce((a, b) => a * b, 1);
+
+            if (newProduct === currentNum) {
+                showMessage('factorMessage', '✓ Correct! Complete factorization!', true);
+                score += 10;
+                document.getElementById('score').textContent = score;
+                updateFactorDisplay();
+                
+                setTimeout(() => {
+                    if (gamePhase === 'factor1') {
+                        gamePhase = 'factor2';
+                        document.getElementById('factorPrompt').textContent = `Find the prime factors of ${num2}`;
+                        document.getElementById('factorInput').value = '';
+                        attempts = 0;
+                        document.getElementById('attempts').textContent = '0';
+                        document.getElementById('factorDisplay').classList.add('hidden');
+                        document.getElementById('factorMessage').classList.add('hidden');
+                    } else {
+                        moveToHCF();
+                    }
+                }, 1500);
+            } else {
+                showMessage('factorMessage', `✓ Correct! Continue factoring ${remaining / factor}...`, true);
+                attempts = 0;
+                document.getElementById('attempts').textContent = '0';
+                updateFactorDisplay();
+            }
+            input.value = '';
+        }
+
+        function moveToHCF() {
+            document.getElementById('hcfNum1').textContent = num1;
+            document.getElementById('hcfNum2').textContent = num2;
+            document.getElementById('hcfN1').textContent = num1;
+            document.getElementById('hcfN2').textContent = num2;
+            document.getElementById('hcfFactors1').textContent = currentFactors1.join(' × ');
+            document.getElementById('hcfFactors2').textContent = currentFactors2.join(' × ');
+            document.getElementById('hcfInput').value = '';
+            document.getElementById('hcfMessage').classList.add('hidden');
+            showScreen('hcfScreen');
+        }
+
+        function submitHCF() {
+            const userHCF = parseInt(document.getElementById('hcfInput').value);
+            const correctHCF = calculateHCF(num1, num2);
+            
+            if (userHCF === correctHCF) {
+                showMessage('hcfMessage', '✓ Correct HCF!', true);
+                score += 15;
+                document.getElementById('score').textContent = score;
+                setTimeout(() => {
+                    moveToLCM();
+                }, 1500);
+            } else {
+                showMessage('hcfMessage', `✗ Incorrect. The HCF is ${correctHCF}`, false);
+                setTimeout(() => {
+                    moveToLCM();
+                }, 2000);
+            }
+        }
+
+        function moveToLCM() {
+            document.getElementById('lcmNum1').textContent = num1;
+            document.getElementById('lcmNum2').textContent = num2;
+            document.getElementById('lcmN1').textContent = num1;
+            document.getElementById('lcmN2').textContent = num2;
+            document.getElementById('lcmFactors1').textContent = currentFactors1.join(' × ');
+            document.getElementById('lcmFactors2').textContent = currentFactors2.join(' × ');
+            document.getElementById('lcmInput').value = '';
+            document.getElementById('lcmMessage').classList.add('hidden');
+            showScreen('lcmScreen');
+        }
+
+        function submitLCM() {
+            const userLCM = parseInt(document.getElementById('lcmInput').value);
+            const correctLCM = calculateLCM(num1, num2);
+            
+            if (userLCM === correctLCM) {
+                showMessage('lcmMessage', '✓ Correct LCM! Well done!', true);
+                score += 15;
+                document.getElementById('score').textContent = score;
+            } else {
+                showMessage('lcmMessage', `✗ Incorrect. The LCM is ${correctLCM}`, false);
+            }
+            
+            setTimeout(() => {
+                document.getElementById('finalScore').textContent = score;
+                showScreen('completeScreen');
+            }, 2000);
+        }
+
+        // Initialize
+        score = 0;
+        document.getElementById('score').textContent = score;
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (!document.getElementById('factorScreen').classList.contains('hidden')) {
+                    submitFactor();
+                } else if (!document.getElementById('hcfScreen').classList.contains('hidden')) {
+                    submitHCF();
+                } else if (!document.getElementById('lcmScreen').classList.contains('hidden')) {
+                    submitLCM();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
